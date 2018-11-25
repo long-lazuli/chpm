@@ -1,11 +1,11 @@
 'use strict';
 
-const yarpm = require('../lib');
+const chpm = require('../lib');
 
 const argv = process.argv.slice(2);
 
 exports.run = function run(options) {
-  yarpm(argv, Object.assign({stdin: process.stdin, stdout: process.stdout, stderr: process.stderr}, options || {}))
+  chpm(argv, Object.assign({stdin: process.stdin, stdout: process.stdout, stderr: process.stderr}, options || {}))
   // Not sure why, but sometimes the process never exits on Git Bash (MINGW64)
     .then((res) => process.exit(res.code))
     .catch(err => {

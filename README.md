@@ -1,51 +1,42 @@
-# yarpm
+# chpoom (`chpm`)
 
-A CLI tool to run npm scripts with either `npm` or `yarn`, depending on how it was started. Useful for setups where
-some team members use `npm` while others use `yarn`, especially when Windows and Unix-like systems are used across the
+A CLI tool to run npm scripts with your prefered package manager, as `npm`, `yarn`, `ied`, `pnpm` or anything configured in the chpoom file.
+Useful for setups where some team members use `npm` while others use `yarn`, especially when Windows and Unix-like systems are used across the
 team.
 
-This tool is a helper to run scripts from `package.json`. Just substitute all `npm` or `yarn` calls with `yarpm`
+This tool is a helper to run scripts from `package.json`. Just substitute all `npm` or `yarn` calls with `chpm`
 and you're good to go:
 ```json
 {
   "scripts": {
-    "start": "yarpm run build",
+    "start": "chpm run build",
     "build": "tsc index.ts"
   }
 }
 ```
 
-When running the `start` script with `yarn start`, the dependent `build` script will be spawned with `yarn`:
-```bash
-~/test$ yarn start
-yarn start v0.21.3
-$ yarpm run build
-yarn run v0.21.3
-$ tsc index.ts
-Done in 1.92s.
-Done in 2.27s.
+The chpoom file is just a list of available commands to run your npm-scripts.
+Only those in that file will be tried, in order of priority :
+
+```ini
+pnpm
+npm
+yarn
 ```
 
-Running the same script with `npm start` will result in the dependent `build` being run with `npm`:
 ```bash
-~/test$ npm start
-
-> test@0.0.1 start /home/me/test
-> yarpm run build
-
-
-> test@0.0.1 build /home/me/test
-> tsc index.ts
+~/test$ chpm start
+pnpm start v0.21.3 # <- if pnpm exists
 ```
 
 ## What this tool is *not*
 This tool is not meant to be an abstraction layer for calling `npm` or `yarn`. It will pass **all** arguments it receives
 unfiltered to the chosen package manager. So you could create the following `package.json` and pass the `-s` flag to
-`yarpm` to silence `npm` output:
+`chpm` to silence `npm` output:
 ```json
 {
   "scripts": {
-    "start": "yarpm run -s build",
+    "start": "chpm run -s build",
     "build": "tsc index.ts"
   }
 }
@@ -63,27 +54,27 @@ This is due to the fact that `yarn` doesn't understand the `-s` option. This is 
 ## Installation
 
 ```bash
-$ npm install yarpm --save-dev
+$ npm install chpm --save-dev
 # or
-$ yarn add yarpm --dev
+$ yarn add chpm --dev
 ```
 
-## CLI Commands
+## CLI Command
 
-The `yarpm` package provides 2 CLI commands:
+The `chpm` package provides 2 CLI commands:
 
-- [yarpm](#yarpm-1)
-- [yarpm-yarn](#yarpm-yarn)
+- [chpm](#chpm-1)
+- [chpm-yarn](#chpm-yarn)
 
-The main command is `yarpm`.
+The main command is `chpm`.
 
-### yarpm
+### chpm
 This command is an in-place substitute for places in `package.json` where `npm` or `yarn` is being used explicitly.
 It reads the `npm_execpath` environment variable to determine the path to the currently used package manager. This env
-var is only set when running `yarpm` as a script. If `yarpm` is used without being embedded in a script, it will
+var is only set when running `chpm` as a script. If `chpm` is used without being embedded in a script, it will
 **always** choose `npm`.
 
-### yarpm-yarn
+### chpm-yarn
 This command can be used in places where you are not in control of how your script is being started, for example when
 using `husky` to run a script as a git hook. This script will **always** prefer `yarn` over `npm` unless `yarn` is not
 available. Only then will it fall back to `npm`.
@@ -91,11 +82,11 @@ available. Only then will it fall back to `npm`.
 
 ## Node API
 
-The `yarpm` package provides a node API.
+The `chpm` package provides a node API.
 
 ```js
-const yarpm = require('yarpm');
-const promise = yarpm(argv, options);
+const chpm = require('chpm');
+const promise = chpm(argv, options);
 ```
 
 - **argv** `string[]` -- The argument list to pass to npm/yarn.
@@ -127,15 +118,15 @@ const promise = yarpm(argv, options);
     Default is `null`.
     Set to `process.stderr` in order to print to stderr.
 
-`yarpm` returns a promise will be *resolved* when the spawned process exits, ***regardless of the exit code***.
-The promise will be *rejected* in case of an internal error inside of `yarpm`.
+`chpm` returns a promise will be *resolved* when the spawned process exits, ***regardless of the exit code***.
+The promise will be *rejected* in case of an internal error inside of `chpm`.
 
 The promise is resolved with an object with the following 2 properties: `spawnArgs` and `code`.
 The `spawnArgs` property contains the array of parameters that were passed to spawn the sub-process.
 The `code` property is the exit code of the sub-process.
 
 ```js
-yarpm(['install']).then(result => {
+chpm(['install']).then(result => {
   console.log(`${result.spawnArgs} -- ${result.code}`);
   // if executed as a package.json script via yarn: /usr/share/yarn/bin/yarn.js,install -- 0
 });
@@ -143,7 +134,7 @@ yarpm(['install']).then(result => {
 
 ## Changelog
 
-https://github.com/BendingBender/yarpm/blob/master/CHANGELOG.md
+https://github.com/BendingBender/chpm/blob/master/CHANGELOG.md
 
 ## Contributing
 
@@ -154,4 +145,4 @@ Thank you for contributing!
 Please use GitHub Issues.
 
 ## License
-[MIT](https://github.com/BendingBender/yarpm/blob/master/LICENSE)
+[MIT](https://github.com/BendingBender/chpm/blob/master/LICENSE)

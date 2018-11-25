@@ -1,10 +1,9 @@
 {
-  "name": "yarpm",
+  "name": "chpm",
   "version": "0.2.1",
-  "description": "CLI tool to run npm scripts with either npm or yarn, depending on how it was started",
+  "description": "CLI tool to run npm scripts with either your prefered package manager, according to a configuration file",
   "bin": {
-    "yarpm": "bin/yarpm.js",
-    "yarpm-yarn": "bin/yarpm-yarn.js"
+    "chpm": "bin/chpm.js"
   },
   "main": "lib/index.js",
   "scripts": {
@@ -12,22 +11,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BendingBender/yarpm.git"
+    "url": "git+https://github.com/long-lazuli/chpm.git"
   },
   "keywords": [
     "npm",
     "yarn",
+    "pnpm",
+    "chpoom",
     "npm-scripts",
     "cross-platform",
     "npm-package",
-    "cli"
+    "cli",
+    "configuration"
   ],
   "author": "Dimitri Benin <semtexx@web.de>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/BendingBender/yarpm/issues"
+    "url": "https://github.com/long-lazuli/chpm/issues"
   },
-  "homepage": "https://github.com/BendingBender/yarpm#readme",
+  "homepage": "https://github.com/long-lazuli/chpm#readme",
   "dependencies": {
     "command-exists": "^1.2.2",
     "cross-spawn": "^5.1.0"
