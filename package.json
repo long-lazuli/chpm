@@ -1,6 +1,6 @@
 {
   "name": "chpm",
-  "version": "0.2.51",
+  "version": "0.2.52",
   "description": "CLI tool to run npm scripts with your prefered package manager, according to a configuration file",
   "bin": {
     "chpm": "bin/chpm"
