@@ -1,8 +1,15 @@
 # chpoom (`chpm`)
 
-A CLI tool to run npm scripts with your prefered package manager, as `npm`, `yarn`, `ied`, `pnpm` or anything configured in the chpoom file.
+A CLI tool to run npm scripts with your prefered package manager, as `npm`, `yarn`, `ied`, `pnpm` or anything configured in the *chpoom config*.
 Useful for setups where some team members use `npm` while others use `yarn`, especially when Windows and Unix-like systems are used across the
 team.
+
+> ## I'm [`yarpm`](https://github.com/BendingBender/yarpm)'s little sibling !
+> 
+> This tool is an experiment over [yarpm](https://github.com/BendingBender/yarpm), which is well maintained and should probably considered, depending on your needs.
+>
+> The difference is that `chpm` has no cli tool for choosing `yarn`.
+> Instead, if you use `chpm` directly for command line, the script will look into configuration for an array of prefered packages manager. The first that exist will be used.
 
 This tool is a helper to run scripts from `package.json`. Just substitute all `npm` or `yarn` calls with `chpm`
 and you're good to go:
@@ -13,20 +20,6 @@ and you're good to go:
     "build": "tsc index.ts"
   }
 }
-```
-
-The chpoom file is just a list of available commands to run your npm-scripts.
-Only those in that file will be tried, in order of priority :
-
-```ini
-pnpm
-npm
-yarn
-```
-
-```bash
-~/test$ chpm start
-pnpm start v0.21.3 # <- if pnpm exists
 ```
 
 ## What this tool is *not*
@@ -61,24 +54,42 @@ $ yarn add chpm --dev
 
 ## CLI Command
 
-The `chpm` package provides 2 CLI commands:
-
-- [chpm](#chpm-1)
-- [chpm-yarn](#chpm-yarn)
-
-The main command is `chpm`.
-
-### chpm
-This command is an in-place substitute for places in `package.json` where `npm` or `yarn` is being used explicitly.
+`chpm` is an in-place substitute for places in `package.json` where `npm` or `yarn` is being used explicitly.
 It reads the `npm_execpath` environment variable to determine the path to the currently used package manager. This env
 var is only set when running `chpm` as a script. If `chpm` is used without being embedded in a script, it will
-**always** choose `npm`.
+first look into the *chpoom config* or fallback to `npm`.
 
-### chpm-yarn
-This command can be used in places where you are not in control of how your script is being started, for example when
-using `husky` to run a script as a git hook. This script will **always** prefer `yarn` over `npm` unless `yarn` is not
-available. Only then will it fall back to `npm`.
+For specifiying your package manager in command line not in the npm environnement,
+you need either to install chpm globally with `npm i -G chpm` or with what is you prefered package manager.
+I personnaly use `pnpm`.
 
+The you can just `$ chpm install & chpm run anything` and it will use your workspace configuration.
+
+From here, you can just use `chpm` everywhere you would have use `npm` in your package.json.
+
+## *chpoom config*
+
+This file is there to specify your prefered packages managers, if chpm can't determine if one is already in use.
+It's just an array of string.
+
+The configuration is read by [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) so you can either use an array in `package.json` as :
+```json
+...
+  "chpm": [
+    "pnpn",
+    "npm",
+    "yarn"
+  ],
+...
+```
+
+or you can put a file in your workspace :
+- `.chpmrc`
+- `.chpmrc.json`
+- `.chpmrc.yaml`
+- `.chpmrc.yml`
+- `.chpmrc.js`
+- `chpm.config.js`
 
 ## Node API
 
